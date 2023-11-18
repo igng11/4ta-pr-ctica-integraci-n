@@ -2,6 +2,7 @@ import { Router } from "express";
 import { checkUserAuthenticated, showLoginView } from "../middlwares/auth.js";
 import passport from "passport";
 import { SessionsController } from "../controllers/sessions.controller.js";
+import { uploaderProfile } from "../utils.js";
 // import { userDao } from "../dao/index.js";
 // import { createHash, isValidPassword } from "../utils.js";
 
@@ -9,15 +10,19 @@ const router = Router();
 
 router.get("/views", SessionsController.viewSessions);
 
-router.post("/signup", SessionsController.signupSession);
+// router.post("/signup", SessionsController.signupSession);
+router.post("/signup", uploaderProfile.single("avatar") , passport.authenticate("signupStrategy", {
+    failureRedirect:"/api/sessions/fail-signup"
+}), SessionsController.redirectLogin);
 
 router.get("/login", showLoginView, SessionsController.loginSessions);
 // router.get("/login", SessionsController.loginSessions);
 
 router.post("/profile", SessionsController.profileSessions);
 
-router.get("/logout", SessionsController.logoutSessions);
+// router.get("/logout", SessionsController.logoutSessions);
 
+router.get("/logout", SessionsController.logout);
 
 //authentication github
 router.get("/loginGithub", passport.authenticate("githubLoginStrategy"));

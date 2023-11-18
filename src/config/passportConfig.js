@@ -53,6 +53,8 @@ export const initializePassport = ()=>{
                 }
                 //si el usuario existe, validar la contraseña
                 if(isValidPassword(user,password)){
+                    user.last_connection = new Date();
+                    await UsersService.updateUser(user._id,user);
                     return done(null,user);
                 } else {
                     return done(null, false);

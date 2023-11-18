@@ -5,6 +5,7 @@ import { createUserErrorMsg } from "../services/error/createUserError.service.js
 import { invalidParamMsg } from "../services/error/invalidParamUser.service.js";
 import { checkRole } from "../middlwares/auth.js";
 import { UsersController } from "../controllers/users.controller.js";
+import { uploaderDocuments } from "../utils.js";
 
 const router = Router();
 
@@ -47,6 +48,15 @@ router.get("/:uid", (req,res)=>{
 
 //cambiar rol de usuarios
 router.post("/premium/:uid", checkRole(["admin"]), UsersController.modifyRole);
+
+router.post("/premium/:uid", checkRole(["admin"]) , UsersController.modifyRole);
+
+//documentos multer
+router.put("/:uid/documents", uploaderDocuments.fields([
+    {name:"identificacion", maxCount:1},
+    {name:"domicilio", maxCount:1},
+    {name:"estadoDeCuenta", maxCount:1},
+]), UsersController.uploadDocuments)
 
 
 export {router as usersRouter};

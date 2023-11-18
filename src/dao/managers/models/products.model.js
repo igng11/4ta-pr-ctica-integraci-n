@@ -55,10 +55,27 @@ const productsSchema = new mongoose.Schema({
     type:[Number],
     require:true
     },
+    code:{
+      type:String,
+      required:true
+    },
+  category:{
+      type:String,
+      required:true,
+      enum:["Ropa","Deportes","Cosmetica","Electrodomesticos"]
+    },
+  stock:{
+      type:Number,
+      required:true
+    },
   owner:{
     type:mongoose.Schema.ObjectId,
     ref:"users"
-  }
+    },
+  thumbnail:{
+    type:String,
+    required:true
+}
 });
 
 //aplicacion de paginate al schema

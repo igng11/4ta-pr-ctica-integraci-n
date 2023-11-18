@@ -94,13 +94,26 @@ export class SessionsController {
         }
     }
 
-    static logoutSessions = (req,res)=>{
-        req.session.destroy(error=>{
-            // console.log("userInfo: ", req.session.userInfo);
-            console.log("session finalizada, session = ",req.session);
-            if(error) return res.render("profile",{user: req.session.userInfo, error:"No se pudo cerrar la sesion"});
-            res.redirect("/login");
-        })
+    // static logoutSessions = (req,res)=>{
+    //     req.session.destroy(error=>{
+    //         // console.log("userInfo: ", req.session.userInfo);
+    //         console.log("session finalizada, session = ",req.session);
+    //         if(error) return res.render("profile",{user: req.session.userInfo, error:"No se pudo cerrar la sesion"});
+    //         res.redirect("/login");
+    //     })
+    // }
+
+    static logout = async(req,res)=>{
+        try {
+            const user = req.user;
+            user.last_connection= new Date();
+            await UserService.updateUser(user._id, user);
+            await req.session.destroy();
+            res.json({status:"success", message:"sesion finalizada"});
+        } catch (error) {
+            console.log(error);
+            res.json({status:"error", message:"No se pudo cerrar la sesion"});
+        }
     }
 
     static loginGitSessions = (req,res)=>{
